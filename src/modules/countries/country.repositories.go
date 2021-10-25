@@ -1,5 +1,9 @@
 package countries
 
+type CountryRepositoryI interface {
+	FindCountryByCode(code string) (*Country, error)
+}
+
 type CountryRepository struct {
 }
 
