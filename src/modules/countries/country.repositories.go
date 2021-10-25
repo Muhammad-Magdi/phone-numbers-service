@@ -7,6 +7,10 @@ type CountryRepositoryI interface {
 type CountryRepository struct {
 }
 
+func NewCountryRepository() CountryRepository {
+	return CountryRepository{}
+}
+
 func (CountryRepository) GetCountryList() []*Country {
 	list := make([]*Country, 0, 5)
 
