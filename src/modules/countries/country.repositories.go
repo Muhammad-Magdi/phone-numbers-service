@@ -1,5 +1,7 @@
 package countries
 
+import "errors"
+
 type CountryFinder interface {
 	FindCountryByCode(code string) (*Country, error)
 }
@@ -24,4 +26,16 @@ func (CountryRepository) GetCountryList() ([]*Country, error) {
 	list = append(list, NewCountry("Mozambique", "258", `\(258\)\ ?[28]\d{7,8}$`))
 
 	return list, nil
+}
+
+func (r CountryRepository) FindCountryByCode(code string) (*Country, error) {
+	list, _ := r.GetCountryList()
+
+	for _, c := range list {
+		if c.Code() == code {
+			return c, nil
+		}
+	}
+
+	return nil, errors.New(ERROR_NO_SUCH_COUNTRY)
 }
