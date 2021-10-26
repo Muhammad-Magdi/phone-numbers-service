@@ -8,6 +8,10 @@
 - [ ] Filters by country and state.
 - [ ] Pagination.
 
+## Endpoints
+
+- `GET: /countries` Returns a list of countries `name` and `code`, This is going to be used by the filtering drop-lists if FE.
+
 ## Design Decisions
 
 ### Code Architecture
