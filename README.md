@@ -4,13 +4,14 @@
 
 - [X] Validate numbers using RegExp.
 - [X] Tests.
-- [ ] List and categorize country phone numbers.
+- [X] List and categorize country phone numbers.
 - [ ] Filters by country and state.
 - [ ] Pagination.
 
 ## Endpoints
 
 - `GET: /countries` Returns a list of countries `name` and `code`, This is going to be used by the filtering drop-lists if FE.
+- `GET: /customers` Returns a list of customers with fields (`id`, `name`, `phone`, `country`, `is_valid`).
 
 ## Design Decisions
 
