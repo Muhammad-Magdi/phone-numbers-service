@@ -11,30 +11,58 @@ import (
 func TestGetCategorizedCustomers(t *testing.T) {
 	service := NewCustomerService(mockedCustomerRepository{}, mockedCountryFinder{})
 
-	customers, err := service.GetCategorizedCustomersList()
-	if err != nil {
-		t.Errorf("Test failed: Unexpected error %+v", err)
+	type test struct {
+		testName               string
+		inFilters              CustomerFilters
+		expectedCount          int
+		expectedValidCount     int
+		expectedValidCountries int
 	}
 
-	if len(customers) != 5 {
-		t.Errorf("Wrong customers count")
+	trueVar := true
+	falseVar := false
+
+	morocco := "Morocco"
+	tunis := "Tunis"
+
+	tests := []test{
+		{testName: "No Filters", inFilters: CustomerFilters{}, expectedCount: 5, expectedValidCount: 2, expectedValidCountries: 3},
+		{testName: "IsValid = true", inFilters: CustomerFilters{IsValid: &trueVar}, expectedCount: 2, expectedValidCount: 2, expectedValidCountries: 2},
+		{testName: "IsValid = false", inFilters: CustomerFilters{IsValid: &falseVar}, expectedCount: 3, expectedValidCount: 0, expectedValidCountries: 1},
+		{testName: "Country = Morocco", inFilters: CustomerFilters{CountryName: &morocco}, expectedCount: 2, expectedValidCount: 1, expectedValidCountries: 2},
+		{testName: "Country = Tunis", inFilters: CustomerFilters{CountryName: &tunis}, expectedCount: 0, expectedValidCount: 0, expectedValidCountries: 0},
+		{testName: "Country = Morocco & IsValid = true", inFilters: CustomerFilters{CountryName: &morocco, IsValid: &trueVar}, expectedCount: 1, expectedValidCount: 1, expectedValidCountries: 1},
+		{testName: "Country = Morocco & IsValid = false", inFilters: CustomerFilters{CountryName: &morocco, IsValid: &falseVar}, expectedCount: 1, expectedValidCount: 0, expectedValidCountries: 1},
 	}
 
-	validCount, validCountries := 0, 0
-	for _, customer := range customers {
-		if customer.IsValid {
-			validCount++
+	for _, tc := range tests {
+		customers, err := service.GetCategorizedCustomersList(tc.inFilters)
+		if err != nil {
+			t.Errorf("Test (%s) failed: Unexpected error %+v", tc.testName, err)
 		}
-		if customer.Country != phones.INVALID_COUNTRY {
-			validCountries++
+
+		fmt.Printf("%+v\n", customers)
+		if len(customers) != tc.expectedCount {
+			t.Errorf("Test (%s) failed: Expected totalCount = %d, found = %d", tc.testName, tc.expectedCount, len(customers))
+		}
+
+		validCount, validCountries := 0, 0
+		for _, customer := range customers {
+			if customer.IsValid {
+				validCount++
+			}
+			if customer.Country != phones.INVALID_COUNTRY {
+				validCountries++
+			}
+		}
+		if validCount != tc.expectedValidCount {
+			t.Errorf("Test (%s) failed: Expected validCount = %d, found = %d", tc.testName, tc.expectedValidCount, validCount)
+		}
+		if validCountries != tc.expectedValidCountries {
+			t.Errorf("Test (%s) failed: Expected validCountriesCount = %d, found = %d", tc.testName, tc.expectedValidCountries, validCountries)
 		}
 	}
-	if validCount != 2 {
-		t.Errorf("Wrong valid customers count:\n expected: %d, found: %d", 2, validCount)
-	}
-	if validCountries != 3 {
-		t.Errorf("Wrong valid customers count:\n expected: %d, found: %d", 2, validCount)
-	}
+
 }
 
 type mockedCustomerRepository struct {

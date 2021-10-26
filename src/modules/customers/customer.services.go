@@ -6,7 +6,7 @@ import (
 )
 
 type CustomerServiceI interface {
-	GetCategorizedCustomersList() ([]CategorizedCustomerDTO, error)
+	GetCategorizedCustomersList(filters CustomerFilters) ([]CategorizedCustomerDTO, error)
 }
 type CustomerService struct {
 	customerRepo CustomerRepositoryI
@@ -25,6 +25,17 @@ type CategorizedCustomerDTO struct {
 	Country string `json:"country"`
 	IsValid bool   `json:"is_valid"`
 }
+type CustomerFilters struct {
+	CountryName *string
+	IsValid     *bool
+}
+
+func (CustomerService) canAppendCustomer(customer CategorizedCustomerDTO, filters CustomerFilters) bool {
+	if (filters.CountryName != nil && customer.Country != *filters.CountryName) || (filters.IsValid != nil && customer.IsValid != *filters.IsValid) {
+		return false
+	}
+	return true
+}
 
 func NewCategorizedCustomer(repo countries.CountryFinder, customer Customer) CategorizedCustomerDTO {
 	phone := phones.PhoneFactory(repo)(customer.Phone)
@@ -37,7 +48,7 @@ func NewCategorizedCustomer(repo countries.CountryFinder, customer Customer) Cat
 		IsValid: phone.IsValid(),
 	}
 }
-func (s CustomerService) GetCategorizedCustomersList() ([]CategorizedCustomerDTO, error) {
+func (s CustomerService) GetCategorizedCustomersList(filters CustomerFilters) ([]CategorizedCustomerDTO, error) {
 	customers, err := s.customerRepo.GetCustomers()
 	// TODO: use app defined error instead of gorm errors
 	if err != nil {
@@ -46,7 +57,11 @@ func (s CustomerService) GetCategorizedCustomersList() ([]CategorizedCustomerDTO
 
 	categorizedCustomers := make([]CategorizedCustomerDTO, 0, len(customers))
 	for _, c := range customers {
-		categorizedCustomers = append(categorizedCustomers, NewCategorizedCustomer(s.countryRepo, c))
+		customer := NewCategorizedCustomer(s.countryRepo, c)
+
+		if s.canAppendCustomer(customer, filters) {
+			categorizedCustomers = append(categorizedCustomers, customer)
+		}
 	}
 
 	return categorizedCustomers, nil
