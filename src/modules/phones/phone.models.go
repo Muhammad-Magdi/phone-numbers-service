@@ -14,7 +14,7 @@ type Phone struct {
 	isValid bool
 }
 
-func PhoneFactory(countryRepo countries.CountryRepositoryI) func(string) Phone {
+func PhoneFactory(countryRepo countries.CountryFinder) func(string) Phone {
 	return func(number string) Phone {
 		phone := Phone{}
 
@@ -30,7 +30,7 @@ func (p *Phone) setNumber(number string) {
 	p.number = number
 }
 
-func (p *Phone) setCountry(countryRepo countries.CountryRepositoryI) {
+func (p *Phone) setCountry(countryRepo countries.CountryFinder) {
 	countryCode, err := extractCountryCode(p.Number())
 
 	if err != nil {

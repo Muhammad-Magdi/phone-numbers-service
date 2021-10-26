@@ -10,10 +10,10 @@ type CustomerServiceI interface {
 }
 type CustomerService struct {
 	customerRepo CustomerRepositoryI
-	countryRepo  countries.CountryRepositoryI
+	countryRepo  countries.CountryFinder
 }
 
-func NewCustomerService(customersRepo CustomerRepositoryI, countryRepo countries.CountryRepositoryI) CustomerService {
+func NewCustomerService(customersRepo CustomerRepositoryI, countryRepo countries.CountryFinder) CustomerService {
 	service := CustomerService{customersRepo, countryRepo}
 	return service
 }
@@ -26,7 +26,7 @@ type CategorizedCustomerDTO struct {
 	IsValid bool   `json:"is_valid"`
 }
 
-func NewCategorizedCustomer(repo countries.CountryRepositoryI, customer Customer) CategorizedCustomerDTO {
+func NewCategorizedCustomer(repo countries.CountryFinder, customer Customer) CategorizedCustomerDTO {
 	phone := phones.PhoneFactory(repo)(customer.Phone)
 
 	return CategorizedCustomerDTO{

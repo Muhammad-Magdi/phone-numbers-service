@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetCategorizedCustomers(t *testing.T) {
-	service := NewCustomerService(mockedCustomerRepository{}, mockedCountryRepository{})
+	service := NewCustomerService(mockedCustomerRepository{}, mockedCountryFinder{})
 
 	customers, err := service.GetCategorizedCustomersList()
 	if err != nil {
@@ -52,10 +52,10 @@ func (mockedCustomerRepository) GetCustomers(filters ...interface{}) ([]Customer
 	return customers, nil
 }
 
-type mockedCountryRepository struct {
+type mockedCountryFinder struct {
 }
 
-func (mockedCountryRepository) FindCountryByCode(code string) (*countries.Country, error) {
+func (mockedCountryFinder) FindCountryByCode(code string) (*countries.Country, error) {
 	if code == "201" {
 		return countries.NewCountry("Egypt", "201", `\(201\)\ [0125]\d{8}$`), nil
 	} else if code == "212" {
