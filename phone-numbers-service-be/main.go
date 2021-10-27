@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/sqlite"
@@ -34,6 +35,11 @@ func main() {
 	customerRouter := customers.NewCustomerRouter(customerRepo, countryRepo)
 
 	router := gin.Default()
+
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+
+	router.Use(cors.New(config))
 
 	router.GET("/countries", countryRouter.ListCountries)
 	router.GET("/customers", customerRouter.ListCustomers)
