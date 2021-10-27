@@ -6,7 +6,13 @@
 - [X] Tests.
 - [X] List and categorize country phone numbers.
 - [X] Filters by country and state.
+- [X] Simple frontend.
 - [ ] Pagination.
+
+## Usage
+```bash
+  sudo docker-compose up --build
+```
 
 ## Endpoints
 

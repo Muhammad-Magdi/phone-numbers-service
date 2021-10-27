@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  backend:
+    build: ./phone-numbers-service-be
+    ports:
+      - "3000:3000"
+  frontend:
+    build: ./phone-numbers-service-ui
+    ports:
+      - "8080:8080"

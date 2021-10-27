@@ -1,7 +1,7 @@
 FROM golang:1.17.2-alpine3.14
 RUN apk add build-base
 
-EXPOSE 8080
+EXPOSE 3000
 
 WORKDIR /app
 
