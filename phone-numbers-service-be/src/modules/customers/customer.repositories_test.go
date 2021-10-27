@@ -16,13 +16,13 @@ func TestGetCustomers(t *testing.T) {
 	type test struct {
 		testName      string
 		inFilters     []interface{}
-		returnedCount int
+		expectedCount int
 	}
 
 	tests := []test{
-		{testName: "returns all customers", inFilters: []interface{}{""}, returnedCount: 41},
-		{testName: "returns a customer by id", inFilters: []interface{}{10}, returnedCount: 1},
-		{testName: "no customer with this phone", inFilters: []interface{}{"phone = 123"}, returnedCount: 0},
+		{testName: "returns all customers", inFilters: []interface{}{""}, expectedCount: 41},
+		{testName: "returns a customer by id", inFilters: []interface{}{10}, expectedCount: 1},
+		{testName: "no customer with this phone", inFilters: []interface{}{"phone = 123"}, expectedCount: 0},
 	}
 
 	repo := NewCustomerRepository(db)
@@ -30,11 +30,11 @@ func TestGetCustomers(t *testing.T) {
 	for _, tc := range tests {
 		customers, err := repo.GetCustomers(tc.inFilters...)
 		if err != nil {
-			t.Errorf("Test GetCustomers failed: unexpected error %+v", err)
+			t.Errorf("Test (%s) failed: unexpected error %+v", tc.testName, err)
 		}
 
-		if len(customers) != tc.returnedCount {
-			t.Errorf("Test GetCustomers failed: expected %d customers, found %d customers", tc.returnedCount, len(customers))
+		if len(customers) != tc.expectedCount {
+			t.Errorf("Test (%s) failed: expected %d customers, found %d customers", tc.testName, tc.expectedCount, len(customers))
 		}
 	}
 

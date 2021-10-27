@@ -18,7 +18,7 @@ func TestNewCustomer(t *testing.T) {
 		customer := NewCustomer(tc.inId, tc.inName, tc.inPhone)
 
 		if customer.ID != tc.inId || customer.Name != tc.inName || customer.Phone != tc.inPhone {
-			t.Errorf("Test '%s' failed: expected id = %d, name = %s, phone = %s, found customer = %+v", tc.testName, tc.inId, tc.inName, tc.inPhone, customer)
+			t.Errorf("Test (%s) failed: expected id = %d, name = %s, phone = %s, found customer = %+v", tc.testName, tc.inId, tc.inName, tc.inPhone, customer)
 		}
 	}
 }

@@ -41,7 +41,6 @@ func TestGetCategorizedCustomers(t *testing.T) {
 			t.Errorf("Test (%s) failed: Unexpected error %+v", tc.testName, err)
 		}
 
-		fmt.Printf("%+v\n", customers)
 		if len(customers) != tc.expectedCount {
 			t.Errorf("Test (%s) failed: Expected totalCount = %d, found = %d", tc.testName, tc.expectedCount, len(customers))
 		}
