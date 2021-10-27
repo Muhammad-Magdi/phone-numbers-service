@@ -4,7 +4,7 @@
     <b-alert :show="loading" variant="info">Loading...</b-alert>
     <b-row align-h="center">
       <b-col cols="4">
-        <v-select          
+        <v-select
           placeholder="Filter By Country..."
           label="label"
           inputId="name"
@@ -17,86 +17,91 @@
           placeholder="Filter By State..."
           label="label"
           inputId="key"
-          :options="[{key: true, label: 'Valid'}, {key: false, label: 'Invalid'}]"
+          :options="[
+            { key: true, label: 'Valid' },
+            { key: false, label: 'Invalid' },
+          ]"
           @input="stateFilterChanged"
         ></v-select>
       </b-col>
     </b-row>
     <b-row>
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Phone</th>
-              <th>Country</th>
-              <th>State</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="customer in customers" :key="customer.id">
-              <td>{{ customer.id }}</td>
-              <td>{{ customer.name }}</td>
-              <td>{{ customer.phone }}</td>
-              <td>{{ customer.country }}</td>
-              <td>{{ customer.is_valid ? 'Valid' : 'Invalid' }}</td>
-            </tr>
-          </tbody>
-        </table>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Country</th>
+            <th>State</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="customer in customers" :key="customer.id">
+            <td>{{ customer.id }}</td>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.phone }}</td>
+            <td>{{ customer.country }}</td>
+            <td>{{ customer.is_valid ? "Valid" : "Invalid" }}</td>
+          </tr>
+        </tbody>
+      </table>
     </b-row>
   </div>
 </template>
 
 <script>
-import api from '@/api'
+import api from "@/api";
 export default {
-  data () {
+  data() {
     return {
       loading: false,
       customers: [],
       countries: [],
       filters: {},
-      model: {}
-    }
+      model: {},
+    };
   },
-  async created () {
-    this.listCustomers()
-    this.listCountries()
+  async created() {
+    this.listCustomers();
+    this.listCountries();
   },
   methods: {
-    async listCustomers () {
-      this.loading = true
-      this.customers = await api.getCustomers(this.filters)
-      this.loading = false
+    async listCustomers() {
+      this.loading = true;
+      this.customers = await api.getCustomers(this.filters);
+      this.loading = false;
     },
-    async listCountries () {
-      this.loading = true
-      this.countries = await api.getCountries().then((countries) => countries.map((country) => {
-        return {
-          ...country,
-          label: `${country.name} (${country.code})`
-        }
-      }))
-      this.loading = false
+    async listCountries() {
+      this.loading = true;
+      this.countries = await api.getCountries().then((countries) =>
+        countries.map((country) => {
+          return {
+            ...country,
+            label: `${country.name} (${country.code})`,
+          };
+        })
+      );
+      this.loading = false;
     },
-    countryFilterChanged (value) {
+    countryFilterChanged(value) {
       if (value === null) {
-        delete this.filters['country']
+        delete this.filters["country"];
       } else {
-        this.filters['country'] = value.name
+        this.filters["country"] = value.name;
       }
-      this.listCustomers()
+      this.listCustomers();
     },
-    stateFilterChanged (value) {
+    stateFilterChanged(value) {
       if (value === null) {
-        delete this.filters['is_valid']
+        delete this.filters["is_valid"];
       } else {
-        this.filters['is_valid'] = value.key
+        this.filters["is_valid"] = value.key;
       }
-      this.listCustomers()
-    }
-  }
-}
+      this.listCustomers();
+    },
+  },
+};
 </script>
 
 <style>
