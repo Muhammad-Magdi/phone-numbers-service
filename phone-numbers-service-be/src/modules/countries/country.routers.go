@@ -6,10 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CountryRouterI interface {
-	ListCountries() []CountryNameDTO
-}
-
 type CountryRouter struct {
 	service CountryServiceI
 }

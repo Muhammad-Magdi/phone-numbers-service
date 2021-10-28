@@ -12,8 +12,9 @@ type CustomerRouter struct {
 	service CustomerServiceI
 }
 
-func NewCustomerRouter(customersRepo CustomerRepositoryI, countryFinderRepo countries.CountryFinder) CustomerRouter {
-	return CustomerRouter{NewCustomerService(customersRepo, countryFinderRepo)}
+func NewCustomerRouter(customerRepo CustomerGetterRepository, countryFinderRepo countries.CountryFinder) CustomerRouter {
+	service := NewCustomerService(customerRepo, countryFinderRepo)
+	return CustomerRouter{service}
 }
 
 func (r CustomerRouter) ListCustomers(c *gin.Context) {
@@ -33,7 +34,7 @@ func (r CustomerRouter) ListCustomers(c *gin.Context) {
 
 	list, err := r.service.GetCategorizedCustomersList(filters)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, map[string]string{"message": "Internal service error!"})
+		c.JSON(http.StatusInternalServerError, map[string]string{"message": "Internal server error!"})
 		return
 	}
 

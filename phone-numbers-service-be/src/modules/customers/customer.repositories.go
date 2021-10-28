@@ -2,7 +2,7 @@ package customers
 
 import "gorm.io/gorm"
 
-type CustomerRepositoryI interface {
+type CustomerGetterRepository interface {
 	GetCustomers(filters ...interface{}) ([]Customer, error)
 }
 
@@ -14,6 +14,7 @@ func NewCustomerRepository(db *gorm.DB) CustomerRepository {
 	return CustomerRepository{db}
 }
 
+// Returns a list of customers satisfying the given filters.
 func (repo CustomerRepository) GetCustomers(filters ...interface{}) ([]Customer, error) {
 	var customers []Customer
 	err := repo.db.Find(&customers, filters...).Error

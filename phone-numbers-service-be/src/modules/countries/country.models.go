@@ -6,11 +6,14 @@ type Country struct {
 	phoneRegExp string
 }
 
+// Returns a pointer to a new country with the specified parameters
 func NewCountry(name string, code string, phoneRegExp string) *Country {
-	return &Country{name: name, code: code, phoneRegExp: phoneRegExp}
+	country := Country{}
+	country.SetCode(code)
+	country.SetName(name)
+	country.SetPhoneRegExp(phoneRegExp)
+	return &country
 }
-
-// ====== Setters ======
 
 func (c *Country) SetName(name string) {
 	c.name = name
@@ -23,8 +26,6 @@ func (c *Country) SetCode(code string) {
 func (c *Country) SetPhoneRegExp(phoneRegExp string) {
 	c.phoneRegExp = phoneRegExp
 }
-
-// ====== Getters ======
 
 func (c Country) Name() string {
 	return c.name

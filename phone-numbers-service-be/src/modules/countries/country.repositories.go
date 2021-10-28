@@ -7,7 +7,7 @@ type CountryFinder interface {
 }
 
 type CountryLister interface {
-	GetCountryList() ([]*Country, error)
+	ListCountries() ([]*Country, error)
 }
 type CountryRepository struct {
 }
@@ -16,7 +16,10 @@ func NewCountryRepository() CountryRepository {
 	return CountryRepository{}
 }
 
-func (CountryRepository) GetCountryList() ([]*Country, error) {
+// Retruns a list of all the supported countries.
+//
+// Currently, there're only 5 fixed countries that are supported.
+func (CountryRepository) ListCountries() ([]*Country, error) {
 	list := make([]*Country, 0, 5)
 
 	list = append(list, NewCountry("Morocco", "212", `\(212\)\ ?[5-9]\d{8}$`))
@@ -28,8 +31,11 @@ func (CountryRepository) GetCountryList() ([]*Country, error) {
 	return list, nil
 }
 
+// Takes a country phone code and returns a pointer to that country.
+//
+// Returns an `ERROR_NO_SUCH_COUNTRY`, if there isn't a country with the given code.
 func (r CountryRepository) FindCountryByCode(code string) (*Country, error) {
-	list, _ := r.GetCountryList()
+	list, _ := r.ListCountries()
 
 	for _, c := range list {
 		if c.Code() == code {

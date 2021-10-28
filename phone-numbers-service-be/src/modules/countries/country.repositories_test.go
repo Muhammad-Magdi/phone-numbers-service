@@ -2,13 +2,13 @@ package countries
 
 import "testing"
 
-func TestGetCountryList(t *testing.T) {
+func TestListCountries(t *testing.T) {
 	repo := NewCountryRepository()
 
-	countries, _ := repo.GetCountryList()
+	countries, _ := repo.ListCountries()
 
 	if len(countries) != 5 {
-		t.Errorf("Testing GetCountryList failed: expected = %d countries, found = %d", 5, len(countries))
+		t.Errorf("Testing ListCountries failed: expected = %d countries, found = %d", 5, len(countries))
 	}
 }
 

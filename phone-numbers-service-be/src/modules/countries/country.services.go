@@ -18,7 +18,7 @@ type CountryNameDTO struct {
 }
 
 func (r CountryService) ListCountries() []CountryNameDTO {
-	countryList, _ := r.repo.GetCountryList()
+	countryList, _ := r.repo.ListCountries()
 
 	countryNames := make([]CountryNameDTO, 0, len(countryList))
 
