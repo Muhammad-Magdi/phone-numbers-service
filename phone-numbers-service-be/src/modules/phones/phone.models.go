@@ -26,6 +26,36 @@ func PhoneFactory(countryRepo countries.CountryFinder) func(string) Phone {
 	}
 }
 
+func (p Phone) Number() string {
+	return p.number
+}
+
+// Returns the country code that this phone (number) exists in.
+//
+// If the phone.Number() is in an unknown or invalid country, it returns `INVALID_COUNTRY`.
+func (p Phone) CountryCode() string {
+	if p.country == nil {
+		return INVALID_COUNTRY
+	}
+
+	return p.country.Code()
+}
+
+// Returns the country name that this phone (number) exists in.
+//
+// If the phone.Number() is in an unknown or invalid country, it returns `INVALID_COUNTRY`.
+func (p Phone) CountryName() string {
+	if p.country == nil {
+		return INVALID_COUNTRY
+	}
+
+	return p.country.Name()
+}
+
+func (p Phone) IsValid() bool {
+	return p.isValid
+}
+
 func (p *Phone) setNumber(number string) {
 	p.number = number
 }
@@ -61,36 +91,6 @@ func (p *Phone) validate() {
 	}
 
 	p.isValid = isValid
-}
-
-func (p Phone) Number() string {
-	return p.number
-}
-
-// Returns the country code that this phone (number) exists in.
-//
-// If the phone.Number() is in an unknown or invalid country, it returns `INVALID_COUNTRY`.
-func (p Phone) CountryCode() string {
-	if p.country == nil {
-		return INVALID_COUNTRY
-	}
-
-	return p.country.Code()
-}
-
-// Returns the country name that this phone (number) exists in.
-//
-// If the phone.Number() is in an unknown or invalid country, it returns `INVALID_COUNTRY`.
-func (p Phone) CountryName() string {
-	if p.country == nil {
-		return INVALID_COUNTRY
-	}
-
-	return p.country.Name()
-}
-
-func (p Phone) IsValid() bool {
-	return p.isValid
 }
 
 // Extracts the country code from a phone number in the form: `(COUNTRYCODE) REST_OF_THE_NUMBER`
